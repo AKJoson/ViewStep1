@@ -15,7 +15,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         final MyCanvasAndPaint canvasAndPaint = findViewById(R.id.canvas_paint);
-        final ValueAnimator valueAnimator = ValueAnimator.ofFloat(0, 100).setDuration(3000);
+        final ValueAnimator valueAnimator = ValueAnimator.ofFloat(0, 100).setDuration(4000);
         valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {

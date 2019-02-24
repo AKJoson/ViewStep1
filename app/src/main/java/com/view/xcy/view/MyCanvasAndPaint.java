@@ -15,6 +15,7 @@ public class MyCanvasAndPaint extends View {
     private int heightPixels;
     private float value;
     private RectF rectF;
+    private RectF rectF1;
 
     public MyCanvasAndPaint(Context context) {
         this(context, null);
@@ -28,13 +29,12 @@ public class MyCanvasAndPaint extends View {
         super(context, attrs, defStyleAttr);
         widthPixels = context.getResources().getDisplayMetrics().widthPixels;
         heightPixels = context.getResources().getDisplayMetrics().heightPixels;
-
         mStrokePaint = new Paint();
         mCiclePaint = new Paint();
         //本命年就来一个红色吧
         mStrokePaint.setColor(Color.RED);
         mCiclePaint.setColor(Color.BLUE);
-        // 仅仅描绘边
+        // 仅仅描绘边idth for stroking. Pass 0 to stroke in hairline mode. Hairlines always draws a single pixel independent of the canva's matrix.
         mStrokePaint.setStyle(Paint.Style.STROKE);
         //画○的进行填充
         mCiclePaint.setStyle(Paint.Style.FILL);
@@ -46,18 +46,20 @@ public class MyCanvasAndPaint extends View {
         mStrokePaint.setAntiAlias(true);
         mCiclePaint.setAntiAlias(true);
         rectF = new RectF(widthPixels / 4, widthPixels / 4,widthPixels-widthPixels/4,widthPixels-widthPixels/4);
+        rectF1 = new RectF(widthPixels/4,widthPixels/2,3*widthPixels/4,widthPixels);
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        //   canvas.drawCircle(30,30,100,mStrokePaint);
-        canvas.drawArc(rectF,0, (float) (360*0.01*value),false,mStrokePaint);
         canvas.drawArc(rectF,0, (float) (360*0.01*value),true,mCiclePaint);
-//        canvas.drawCircle(widthPixels / 2, heightPixels / 2, 190, mCiclePaint);
-//        canvas.drawCircle(widthPixels / 2, heightPixels / 2, 200, mStrokePaint);
-        //   Rect rect = new Rect(widthPixels/4,heightPixels/4,widthPixels-widthPixels/4,heightPixels-heightPixels/4);
-        //   canvas.drawRect(rect,mStrokePaint);
+        if (value>25){
+            canvas.drawArc(rectF,0, (float) (360*0.01*value),false,mStrokePaint);
+        }
+        if (value>25){
+            canvas.drawArc(rectF1,0, (float) (360*0.01*value),true,mCiclePaint);
+        }
+        canvas.drawArc(rectF1,0, (float) (360*0.01*value),false,mStrokePaint);
     }
 
     public void startCanvas(float value){
