@@ -1,4 +1,4 @@
-## 这都2019了，还不吧Canvas和Paint牵出来加点特效？？
+## 这都2019了，还不把Canvas和Paint牵出来加点特效？？
 ### Canvas 和 Paint 
 - Canvas主要方法有：
     - 这些方法，传入的位置，单位都是 px
