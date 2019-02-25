@@ -15,7 +15,7 @@
     - mStrokePaint.setAntiAlias(true);//加不加抗锯齿特效
 
 ### tips1:经过测试，Paint的描边，是外描边，而不是内描边；
-### tips2:那么，在上面的Dcanvas.drawCircle(x,y...),我们引入了坐标。非常棒，那么隔壁老殷就问了，wtf，这个坐标是相对与什么的？现场小殷就回答了：先对于View的左上角，向右-->x轴正轴，向下--->y轴正轴。
+### tips2:那么，在上面的Dcanvas.drawCircle(x,y...),我们引入了坐标。非常棒，隔壁老殷就问了，wtf，这个坐标是相对与什么的？现场小殷就回答了：先对于View的左上角，向右-->x轴正轴，向下--->y轴正轴。
 ### 弱鸡的小殷同学一开始是这么滴：
         <com.*****.MyView
         android:layout_width=50dp;
