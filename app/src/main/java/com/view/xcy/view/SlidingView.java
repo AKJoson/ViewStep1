@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.ViewGroup;
 import android.widget.HorizontalScrollView;
@@ -50,10 +51,10 @@ public class SlidingView extends HorizontalScrollView {
         menuParams.height = heightPixels;
         menuView.setLayoutParams(menuParams);
         contentView = (ViewGroup) container.getChildAt(1);
-        ViewGroup.LayoutParams contentrParams = contentView.getLayoutParams();
-        contentrParams.width = screenWidth;
-        contentrParams.height = heightPixels;
-        contentView.setLayoutParams(contentrParams);
+        ViewGroup.LayoutParams contentParams = contentView.getLayoutParams();
+        contentParams.width = screenWidth;
+        contentParams.height = heightPixels;
+        contentView.setLayoutParams(contentParams);
     }
 
     @Override
@@ -69,7 +70,7 @@ public class SlidingView extends HorizontalScrollView {
 
         float menuPercent = 0.5f + rangePercent * 0.5f;
 
-        menuView.setTranslationX(menuPercent);
+        //menuView.setTranslationX(menuPercent);
     }
 
     @Override
@@ -77,19 +78,46 @@ public class SlidingView extends HorizontalScrollView {
         super.onLayout(changed, l, t, r, b);
         openContent();
     }
-
-    private void openContent() {
-        smoothScrollTo(menuWidth, 0);
+    private boolean isContent = false;
+    private void openMenu() {
+        isContent = false;
+        smoothScrollTo(0, 0);
     }
 
+    private void openContent() {
+        isContent = true;
+        smoothScrollTo(menuWidth, 0);
+    }
+    private boolean isIntercept = false;
     //为menu打开状态的时候，点击右侧content 打开content
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
+        if (ev.getAction() == MotionEvent.ACTION_UP) {
+            if (ev.getX() > menuWidth && !isContent){
+                isIntercept  = true;
+                openContent();
+                return true;
+            }
+        }
         return super.onInterceptTouchEvent(ev);
     }
 
-    private void openMenu() {
-        smoothScrollTo(0, 0);
+    @Override
+    public boolean onTouchEvent(MotionEvent ev) {
+        if (isIntercept){
+            isIntercept = false;
+            return true;
+        }
+        // 如果不这样操作，那么ScrollView滑动到中间，menuView和contenttView个显示一半，不是很奇怪的效果吗？？
+        if (ev.getAction() == MotionEvent.ACTION_UP){
+                if (getScrollX() > screenWidth/2){
+                    openContent();
+                }else{
+                    openMenu();
+                }
+                return true;
+        }
+        return super.onTouchEvent(ev);
     }
 
     private int dp2px(int dpValue) {
