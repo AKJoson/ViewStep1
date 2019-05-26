@@ -5,7 +5,9 @@ import android.content.res.TypedArray;
 import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.MotionEvent;
+import android.view.VelocityTracker;
 import android.view.ViewGroup;
 import android.widget.HorizontalScrollView;
 
@@ -19,6 +21,7 @@ public class SlidingView extends HorizontalScrollView {
     private int menuWidth;
     private ViewGroup menuView;
     private ViewGroup contentView;
+    private GestureDetector mGestureDetector;
 
     public SlidingView(Context context) {
         this(context, null);
@@ -36,7 +39,26 @@ public class SlidingView extends HorizontalScrollView {
         heightPixels = getResources().getDisplayMetrics().heightPixels;
         menuWidth = screenWidth - edgeWidth;
         typedArray.recycle();
+        mGestureDetector = new GestureDetector(context,new GestureDetector.SimpleOnGestureListener(){
+            @Override
+            public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+                //快速滑动
+                if (isContent){
+                    if (velocityX>0){
+                        openMenu();
+                        return true;
+                    }
+                }else{
+                    if (velocityX<0) {
+                        openContent();
+                        return true;
+                    }
+                }
+                return super.onFling(e1, e2, velocityX, velocityY);
+            }
+        });
     }
+
 
     @Override
     protected void onFinishInflate() {
@@ -108,7 +130,11 @@ public class SlidingView extends HorizontalScrollView {
             isIntercept = false;
             return true;
         }
-        // 如果不这样操作，那么ScrollView滑动到中间，menuView和contenttView个显示一半，不是很奇怪的效果吗？？
+        if (mGestureDetector.onTouchEvent(ev)){
+            //快速滑动执行了，下面就不要执行了
+            return true;
+        }
+        // 如果不这样操作，那么ScrollView滑动到中间，menuView和contentView个显示一半，不是很奇怪的效果吗？？
         if (ev.getAction() == MotionEvent.ACTION_UP){
                 if (getScrollX() > screenWidth/2){
                     openContent();
