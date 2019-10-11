@@ -9,6 +9,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 
 import com.view.xcy.fragments.DrawArcFragment;
+import com.view.xcy.fragments.DrawTextFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,9 +23,10 @@ public class MainActivity extends AppCompatActivity {
     public static String[] tabNames;
 
     static {
-      fragmentList = new ArrayList<>();
-      fragmentList.add(new DrawArcFragment());
-      tabNames = new String[]{"drawArc"};
+        fragmentList = new ArrayList<>();
+        fragmentList.add(new DrawArcFragment());
+        fragmentList.add(new DrawTextFragment());
+        tabNames = new String[]{"drawArc", "drawText"};
     }
 
     @Override
@@ -33,10 +35,10 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         tabLayout = findViewById(R.id.table_layout);
         viewPager = findViewById(R.id.view_pager);
-        initView();
+        initPagerAdapter();
     }
 
-    private void initView() {
+    private void initPagerAdapter() {
         tabLayout.setupWithViewPager(viewPager);
         viewPager.setAdapter(new FragmentPagerAdapter(getSupportFragmentManager()) {
 
