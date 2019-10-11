@@ -11,7 +11,9 @@ import android.view.VelocityTracker;
 import android.view.ViewGroup;
 import android.widget.HorizontalScrollView;
 
+import com.view.xcy.BaseApplication;
 import com.view.xcy.R;
+import com.view.xcy.Utils.Utils;
 
 public class SlidingView extends HorizontalScrollView {
 
@@ -22,6 +24,7 @@ public class SlidingView extends HorizontalScrollView {
     private ViewGroup menuView;
     private ViewGroup contentView;
     private GestureDetector mGestureDetector;
+    private boolean canScroll = true;
 
     public SlidingView(Context context) {
         this(context, null);
@@ -34,22 +37,22 @@ public class SlidingView extends HorizontalScrollView {
     public SlidingView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         TypedArray typedArray = getResources().obtainAttributes(attrs, R.styleable.SlidingView);
-        edgeWidth = typedArray.getDimensionPixelSize(R.styleable.SlidingView_menuWidth, dp2px(45));
+        edgeWidth = typedArray.getDimensionPixelSize(R.styleable.SlidingView_menuWidth, Utils.dp2px(45));
         screenWidth = getResources().getDisplayMetrics().widthPixels;
         heightPixels = getResources().getDisplayMetrics().heightPixels;
         menuWidth = screenWidth - edgeWidth;
         typedArray.recycle();
-        mGestureDetector = new GestureDetector(context,new GestureDetector.SimpleOnGestureListener(){
+        mGestureDetector = new GestureDetector(context, new GestureDetector.SimpleOnGestureListener() {
             @Override
             public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
                 //快速滑动
-                if (isContent){
-                    if (velocityX>0){
+                if (isContent) {
+                    if (velocityX > 0) {
                         openMenu();
                         return true;
                     }
-                }else{
-                    if (velocityX<0) {
+                } else {
+                    if (velocityX < 0) {
                         openContent();
                         return true;
                     }
@@ -100,7 +103,9 @@ public class SlidingView extends HorizontalScrollView {
         super.onLayout(changed, l, t, r, b);
         openContent();
     }
+
     private boolean isContent = false;
+
     private void openMenu() {
         isContent = false;
         smoothScrollTo(0, 0);
@@ -110,13 +115,16 @@ public class SlidingView extends HorizontalScrollView {
         isContent = true;
         smoothScrollTo(menuWidth, 0);
     }
+
     private boolean isIntercept = false;
+
     //为menu打开状态的时候，点击右侧content 打开content
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
+
         if (ev.getAction() == MotionEvent.ACTION_UP) {
-            if (ev.getX() > menuWidth && !isContent){
-                isIntercept  = true;
+            if (ev.getX() > menuWidth && !isContent) {
+                isIntercept = true;
                 openContent();
                 return true;
             }
@@ -126,28 +134,27 @@ public class SlidingView extends HorizontalScrollView {
 
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
-        if (isIntercept){
+        if (isIntercept) {
             isIntercept = false;
             return true;
         }
-        if (mGestureDetector.onTouchEvent(ev)){
+        if (mGestureDetector.onTouchEvent(ev)) {
             //快速滑动执行了，下面就不要执行了
             return true;
         }
         // 如果不这样操作，那么ScrollView滑动到中间，menuView和contentView个显示一半，不是很奇怪的效果吗？？
-        if (ev.getAction() == MotionEvent.ACTION_UP){
-                if (getScrollX() > screenWidth/2){
-                    openContent();
-                }else{
-                    openMenu();
-                }
-                return true;
+        if (ev.getAction() == MotionEvent.ACTION_UP) {
+            if (getScrollX() > screenWidth / 2) {
+                openContent();
+            } else {
+                openMenu();
+            }
+            return true;
         }
         return super.onTouchEvent(ev);
     }
 
-    private int dp2px(int dpValue) {
-        final float scale = getResources().getDisplayMetrics().density;
-        return (int) (dpValue * scale + 0.5f);
+    public void canScroll(boolean canScroll) {
+        this.canScroll = canScroll;
     }
 }
