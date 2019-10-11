@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.view.xcy.fragments.DrawArcFragment;
 import com.view.xcy.fragments.DrawTextFragment;
+import com.view.xcy.fragments.ViewDragerHelperFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +27,8 @@ public class MainActivity extends AppCompatActivity {
         fragmentList = new ArrayList<>();
         fragmentList.add(new DrawArcFragment());
         fragmentList.add(new DrawTextFragment());
-        tabNames = new String[]{"drawArc", "drawText"};
+        fragmentList.add(new ViewDragerHelperFragment());
+        tabNames = new String[]{"drawArc", "drawText","viewDragerHelper"};
     }
 
     @Override
